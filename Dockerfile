@@ -28,6 +28,7 @@ RUN set -ex; \
 		libpng-dev \
 		libzip-dev \
     postgresql-dev \
+    libmemcached-dev \ 
 	; \
 	\
 	docker-php-ext-configure gd --with-freetype --with-jpeg; \
@@ -41,7 +42,9 @@ RUN set -ex; \
     pgsql pdo_pgsql \
 	; \
 	pecl install imagick-3.4.4; \
-	docker-php-ext-enable imagick; \
+  pecl install redis; \
+	pecl install memcached; \
+	docker-php-ext-enable imagick redis memcached; \
 	\
 	runDeps="$( \
 		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
