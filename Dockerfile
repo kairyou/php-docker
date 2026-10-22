@@ -1,4 +1,4 @@
-FROM php:7-fpm-alpine
+FROM php:8.5.12-fpm-alpine
 # https://hub.docker.com/_/php
 # https://hub.docker.com/_/wordpress
 # + pdo pdo_mysql
@@ -28,7 +28,7 @@ RUN set -ex; \
 		libpng-dev \
 		libzip-dev \
     postgresql-dev \
-    libmemcached-dev \ 
+    libmemcached-dev \
 	; \
 	\
 	docker-php-ext-configure gd --with-freetype --with-jpeg; \
@@ -41,7 +41,7 @@ RUN set -ex; \
     pdo pdo_mysql \
     pgsql pdo_pgsql \
 	; \
-	pecl install imagick-3.4.4; \
+	pecl install imagick; \
   pecl install redis; \
 	pecl install memcached; \
 	docker-php-ext-enable imagick redis memcached; \
@@ -58,13 +58,11 @@ RUN set -ex; \
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
 RUN set -eux; \
-	docker-php-ext-enable opcache; \
 	{ \
 		echo 'opcache.memory_consumption=128'; \
 		echo 'opcache.interned_strings_buffer=8'; \
 		echo 'opcache.max_accelerated_files=4000'; \
 		echo 'opcache.revalidate_freq=2'; \
-		echo 'opcache.fast_shutdown=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
 # https://wordpress.org/support/article/editing-wp-config-php/#configure-error-logging
 RUN { \
